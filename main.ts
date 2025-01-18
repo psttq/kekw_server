@@ -68,4 +68,4 @@ setInterval(() => {
   const currentTime = Temporal.Now.instant().epochMilliseconds;
   game.update((currentTime-lastTime)*10);
   lastTime = currentTime;
-}, 4); // Send every second
+}, 16); // Send every second

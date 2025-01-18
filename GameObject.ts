@@ -1,6 +1,7 @@
-import * as Matter from "matter-js";
+import {default as Matter} from "matter-js";
 
-type Position = {
+
+export type Position = {
     x: number,
     y: number
 };
@@ -17,29 +18,31 @@ export class GameObject{
 
     constructor(id: number, position: Position){
         this.id = id;
-        this.setPosition(position);
         let width = 50;
         let height = 50;
         let radius = (width + height) / 4;
         this.body = Matter.Bodies.circle(0, 0, radius);
+
+        this.setPosition(position);
     }
 
     setPosition(position: Matter.Vector) {
-        Matter.Body.setPosition(this.body, position);
+        if(this.body)
+            Matter.Body.setPosition(this.body, position);
     }
 
     update(){
     if (this.body.position.x < 0) {
-        Matter.Body.applyForce(this.body, this.body.position, { x: 5, y: 0 });
+        Matter.Body.applyForce(this.body, this.body.position, { x: 0.001, y: 0 });
         }
         if (this.body.position.y < 0) {
-        Matter.Body.applyForce(this.body, this.body.position, { x: 0, y: 5 });
+        Matter.Body.applyForce(this.body, this.body.position, { x: 0, y: 0.001 });
         }
         if (this.body.position.x > 600) {
-        Matter.Body.applyForce(this.body, this.body.position, { x: -5, y: 0 });
+        Matter.Body.applyForce(this.body, this.body.position, { x: -0.001, y: 0 });
         }
         if (this.body.position.y > 600) {
-        Matter.Body.applyForce(this.body, this.body.position, { x: 0, y: -5 });
+        Matter.Body.applyForce(this.body, this.body.position, { x: 0, y: -0.001 });
         }
     }
 

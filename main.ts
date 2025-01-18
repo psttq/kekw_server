@@ -11,15 +11,17 @@ Deno.serve((req) => {
     return new Response(null, { status: 501 });
   }
   const { socket, response } = Deno.upgradeWebSocket(req, {});
+  let ball = new GameObject(game.currentIDStack, {x:0,y:0});
+  let client = new Client(socket, undefined,ball);
+  game.addGameObject(ball);
 
-  let client = new Client(socket, undefined);
   clients.add(client);
 
   socket.addEventListener("open", (e) => {
     console.log("a client connected!");
     const new_player = new GameObject(game.currentIDStack, {
-      x: game.gameObjects.length * 10,
-      y: game.gameObjects.length * 10,
+      x: 100,
+      y: 100
     });
     game.addGameObject(new_player);
     client.gameObject = new_player;
@@ -27,12 +29,14 @@ Deno.serve((req) => {
       playerId: new_player.id,
       game: game.serialize(),
     };
+
     socket.send(JSON.stringify(data));
   });
 
   socket.addEventListener("close", (e) => {
     if (client.gameObject !== undefined) {
       console.log("a client", client.gameObject.id, "disconnected!");
+      game.removeGameObject(client.ball);
       game.removeGameObject(client.gameObject);
       clients.delete(client);
     }
@@ -42,7 +46,8 @@ Deno.serve((req) => {
     let data = JSON.parse(event.data);
     let go = game.gameObjects.find((x) => x.id === data.id);
     if (go) {
-      go.setPosition({x: data.mouse_x, y: data.mouse_y});
+      // go.setPosition({x: data.mouse_x, y: data.mouse_y});
+      client.update(data.mouse_x, data.mouse_y);
     }
   });
   return response;
@@ -61,6 +66,6 @@ setInterval(() => {
     }
   }
   const currentTime = Temporal.Now.instant().epochMilliseconds;
-  game.update(currentTime-lastTime);
+  game.update((currentTime-lastTime)*10);
   lastTime = currentTime;
 }, 4); // Send every second

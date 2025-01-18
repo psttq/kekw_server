@@ -18,6 +18,11 @@ export class Game{
         this.gameObjects = [];
         this.matter_engine = Matter.Engine.create();
         this.matter_engine.world.gravity.y = 0;
+
+        for(let i = 0; i < 10; i++){
+            let ball = new GameObject(this.currentIDStack, {x: 100+i%5*100, y: 300+i/5*100})
+            this.addGameObject(ball);
+        }
     }
     
     addGameObject(gameObject: GameObject){

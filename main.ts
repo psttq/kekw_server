@@ -6,7 +6,7 @@ const game = new Game();
 
 const clients = new Set<Client>();
 
-Deno.serve((req) => {
+Deno.serve({port: 8123},(req) => {
   if (req.headers.get("upgrade") != "websocket") {
     return new Response(null, { status: 501 });
   }

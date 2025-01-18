@@ -2,7 +2,10 @@
   "tasks": {
     "dev": "deno run --watch main.ts"
   },
+  "nodeModulesDir": "auto",
   "imports": {
-    "@std/assert": "jsr:@std/assert@1"
+    "@std/assert": "jsr:@std/assert@1",
+    "@types/matter-js": "npm:@types/matter-js@^0.19.8",
+    "matter-js": "npm:matter-js@^0.20.0"
   }
 }
